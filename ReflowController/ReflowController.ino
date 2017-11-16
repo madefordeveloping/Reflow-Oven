@@ -93,9 +93,9 @@
 *******************************************************************************/
 // Comment either one the following #define to select your board revision
 // Newer board version starts from v1.60 using MAX31855KASA+ chip
-#define  USE_MAX31855
+//#define  USE_MAX31855
 // Older board version below version v1.60 using MAX6675ISA+ chip
-//#define USE_MAX6675
+#define USE_MAX6675
 
 // ***** INCLUDES *****
 #include <LiquidCrystal.h>
@@ -140,10 +140,10 @@ typedef enum DEBOUNCE_STATE
 } debounceState_t;
 
 // ***** CONSTANTS *****
-#define TEMPERATURE_ROOM 50
-#define TEMPERATURE_SOAK_MIN 150
-#define TEMPERATURE_SOAK_MAX 200
-#define TEMPERATURE_REFLOW_MAX 250
+#define TEMPERATURE_ROOM 25 //50
+#define TEMPERATURE_SOAK_MIN 30 //150
+#define TEMPERATURE_SOAK_MAX 200 //35
+#define TEMPERATURE_REFLOW_MAX 100 //250
 #define TEMPERATURE_COOL_MIN 100
 #define SENSOR_SAMPLING_TIME 1000
 #define SOAK_TEMPERATURE_STEP 5
@@ -197,19 +197,19 @@ unsigned char degree[8]  = {
 	int buzzerPin = 6;
 	int switchPin = A0;
 #else
-	int ssrPin = 5;
+	int ssrPin = 13; //5
 	int thermocoupleSOPin = A5;
 	int thermocoupleCSPin = A4;
 	int thermocoupleCLKPin = A3;
-	int lcdRsPin = 7;
-	int lcdEPin = 8;
-	int lcdD4Pin = 9;
-	int lcdD5Pin = 10;
-	int lcdD6Pin = 11;
-	int lcdD7Pin = 12;
+	int lcdRsPin = 8; //7
+	int lcdEPin = 9; //8
+	int lcdD4Pin = 4; //9
+	int lcdD5Pin = 5; //10
+	int lcdD6Pin = 6; //11
+	int lcdD7Pin = 7; //12
 	int ledRedPin = A1;
 	int ledGreenPin = A0;
-	int buzzerPin = 6;
+	int buzzerPin = 12; //6
 	int switch1Pin = 2;
 	int switch2Pin = 3;
 #endif
