@@ -197,18 +197,29 @@ unsigned char degree[8]  = {
 	int buzzerPin = 6;
 	int switchPin = A0;
 #else
-	int ssrPin = 13; //5
+
+/**********************
+DFRobot LCD Shield Reserved pins
+Analog 0 (A0) = Buttons
+Digital 4 t/m 10 = LCD Display
+**********************/
+/*INPUT PINS*/
 	int thermocoupleSOPin = A5;
 	int thermocoupleCSPin = A4;
 	int thermocoupleCLKPin = A3;
+
+/* LCD PINS*/
 	int lcdRsPin = 8; //7
 	int lcdEPin = 9; //8
 	int lcdD4Pin = 4; //9
 	int lcdD5Pin = 5; //10
 	int lcdD6Pin = 6; //11
 	int lcdD7Pin = 7; //12
+
+/* OUTPUT PINS*/
+  int ssrPin = 13; //5 Solid State Relay
 	int ledRedPin = A1;
-	int ledGreenPin = A0;
+	int ledGreenPin = A2; //A0
 	int buzzerPin = 12; //6
 	int switch1Pin = 2;
 	int switch2Pin = 3;
