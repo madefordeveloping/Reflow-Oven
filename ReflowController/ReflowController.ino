@@ -140,10 +140,10 @@ typedef enum DEBOUNCE_STATE
 } debounceState_t;
 
 // ***** CONSTANTS *****
-#define TEMPERATURE_ROOM 25 //50
-#define TEMPERATURE_SOAK_MIN 30 //150
-#define TEMPERATURE_SOAK_MAX 200 //35
-#define TEMPERATURE_REFLOW_MAX 100 //250
+#define TEMPERATURE_ROOM 50
+#define TEMPERATURE_SOAK_MIN 150
+#define TEMPERATURE_SOAK_MAX 200
+#define TEMPERATURE_REFLOW_MAX 240
 #define TEMPERATURE_COOL_MIN 100
 #define SENSOR_SAMPLING_TIME 1000
 #define SOAK_TEMPERATURE_STEP 5
@@ -222,8 +222,8 @@ Digital 4 t/m 10 = LCD Display
 	int ledGreenPin = A2; //A0
 	int buzzerPin = 12; //6
 	int switch1Pin = 2;
-	int switch2Pin = 3;
-	int freePin = 11;
+//	int switch2Pin = 3;
+//	int freePin = 11;
 #endif
 
 // ***** PID CONTROL VARIABLES *****
@@ -267,6 +267,10 @@ LiquidCrystal lcd(lcdRsPin, lcdEPin, lcdD4Pin, lcdD5Pin, lcdD6Pin, lcdD7Pin);
 
 void setup()
 {
+	// Serial communication at 57600 bps
+  Serial.begin(57600);
+	Serial.println("Serial Output Enabled");
+
   // SSR pin initialization to ensure reflow oven is off
   digitalWrite(ssrPin, LOW);
   pinMode(ssrPin, OUTPUT);
@@ -278,13 +282,18 @@ void setup()
   // LED pins initialization and turn on upon start-up (active low)
   digitalWrite(ledRedPin, LOW);
   pinMode(ledRedPin, OUTPUT);
+
 	#ifdef USE_MAX6675
-    // LED pins initialization and turn on upon start-up (active low)
+	  Serial.println("MAX6675");
+
+		// LED pins initialization and turn on upon start-up (active low)
     digitalWrite(ledGreenPin, LOW);
 		pinMode(ledGreenPin, OUTPUT);
+
 		// Switch pins initialization
 		pinMode(switch1Pin, INPUT);
-		pinMode(switch2Pin, INPUT);
+//  pinMode(freePin, OUTPUT);
+//	pinMode(switch2Pin, INPUT);
 	#endif
 
   // Start-up splash
@@ -298,9 +307,6 @@ void setup()
   digitalWrite(buzzerPin, LOW);
   delay(2500);
   lcd.clear();
-
-  // Serial communication at 57600 bps
-  Serial.begin(57600);
 
   // Turn off LED (active low)
   digitalWrite(ledRedPin, HIGH);
@@ -409,6 +415,10 @@ void loop()
 		if (input >= TEMPERATURE_ROOM)
 		{
 			reflowState = REFLOW_STATE_TOO_HOT;
+			Serial.print("INPUT: ");
+			Serial.println(input);
+			Serial.print("Temperature Room:");
+			Serial.println(TEMPERATURE_ROOM);
 		}
 		else
 		{
@@ -474,7 +484,7 @@ void loop()
     // Crude method that works like a charm and safe for the components
     if (input >= (TEMPERATURE_REFLOW_MAX - 5))
     {
-      // Set PID parameters for cooling ramp
+      // Set PID parameters  for cooling ramp
       reflowOvenPID.SetTunings(PID_KP_REFLOW, PID_KI_REFLOW, PID_KD_REFLOW);
       // Ramp down to minimum cooling temperature
       setpoint = TEMPERATURE_COOL_MIN;
