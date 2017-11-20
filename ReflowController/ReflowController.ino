@@ -142,8 +142,8 @@ typedef enum DEBOUNCE_STATE
 // ***** CONSTANTS *****
 #define TEMPERATURE_ROOM 50
 #define TEMPERATURE_SOAK_MIN 150
-#define TEMPERATURE_SOAK_MAX 180 //200
-#define TEMPERATURE_REFLOW_MAX 230 //240
+#define TEMPERATURE_SOAK_MAX 190 //200
+#define TEMPERATURE_REFLOW_MAX 235
 #define TEMPERATURE_COOL_MIN 100
 #define SENSOR_SAMPLING_TIME 1000
 #define SOAK_TEMPERATURE_STEP 4 //5
@@ -298,7 +298,7 @@ void setup()
 
   // Start-up splash
   digitalWrite(buzzerPin, HIGH);
-  lcd.begin(8, 2);
+  lcd.begin(16, 2);
   lcd.createChar(0, degree);
   lcd.clear();
   lcd.print("Reflow");
@@ -382,6 +382,13 @@ void loop()
     lcd.clear();
     // Print current system state
     lcd.print(lcdMessagesReflowStatus[reflowState]);
+
+		//Print current setpoint
+		lcd.setCursor(9, 0);
+		lcd.print("S ");
+		lcd.setCursor(10, 0);
+		lcd.print(setpoint);
+
     // Move the cursor to the 2 line
     lcd.setCursor(0, 1);
 
@@ -415,10 +422,6 @@ void loop()
 		if (input >= TEMPERATURE_ROOM)
 		{
 			reflowState = REFLOW_STATE_TOO_HOT;
-			Serial.print("INPUT: ");
-			Serial.println(input);
-			Serial.print("Temperature Room:");
-			Serial.println(TEMPERATURE_ROOM);
 		}
 		else
 		{
