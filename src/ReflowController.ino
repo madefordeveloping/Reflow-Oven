@@ -104,7 +104,10 @@
 #else
 	#include <max6675.h>
 #endif
-#include <PID_v1.h>
+#include <PID_v1.h>	// PID library
+#include <SoftwareSerial.h> // BT serial
+
+SoftwareSerial btSerial(3, 11); // 3 RX, 11 TX
 
 // ***** TYPE DEFINITIONS *****
 typedef enum REFLOW_STATE
@@ -271,6 +274,10 @@ void setup()
   Serial.begin(57600);
 	Serial.println("Serial Output Enabled");
 
+	// BT Serial communication at 57600 bps
+  btSerial.begin(57600);
+	btSerial.println("BT Serial Output Enabled");
+
   // SSR pin initialization to ensure reflow oven is off
   digitalWrite(ssrPin, LOW);
   pinMode(ssrPin, OUTPUT);
@@ -303,7 +310,7 @@ void setup()
   lcd.clear();
   lcd.print("Reflow");
   lcd.setCursor(0, 1);
-  lcd.print("Oven 1.2");
+  lcd.print("Oven 1.0");
   digitalWrite(buzzerPin, LOW);
   delay(2500);
   lcd.clear();
@@ -371,6 +378,18 @@ void loop()
       Serial.print(input);
       Serial.print(" ");
       Serial.println(output);
+
+			// Send temperature and time stamp to BT serial
+			// Using comma separation for plotting graph.
+			btSerial.print("E");
+			btSerial.print(timerSeconds);
+      btSerial.print(",");
+      //btSerial.print(setpoint);
+      //btSerial.print(",");
+      //btSerial.print(input);
+      //btSerial.print(",");
+      btSerial.print(output);
+			btSerial.print("\n");
     }
     else
     {
@@ -385,7 +404,7 @@ void loop()
 
 		//Print current setpoint
 		lcd.setCursor(9, 0);
-		lcd.print("S ");
+		lcd.print("S:");
 		lcd.setCursor(10, 0);
 		lcd.print(setpoint);
 
@@ -430,6 +449,8 @@ void loop()
 			{
         // Send header for CSV file
         Serial.println("Time Setpoint Input Output");
+				// Send header for BT CSV file
+				btSerial.println("Time Setpoint Input Output");
         // Intialize seconds timer for serial debug information
         timerSeconds = 0;
         // Initialize PID control window starting time
